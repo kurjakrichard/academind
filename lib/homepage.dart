@@ -29,23 +29,36 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Első program'),
-      ),
-      body: Column(
-        children: [
-          Question(
-              questionText: questions[_questionIndex]['question'] as String),
-          ...(questions[_questionIndex]['answers'] as List<String>)
-              .map(
-                (answer) => Answer(
-                  onTap: _onAnswer,
-                  answer: answer,
+        floatingActionButton: FloatingActionButton(
+            onPressed: restart,
+            tooltip: 'Reset questions.',
+            child: const Icon(Icons.reset_tv)),
+        appBar: AppBar(
+          title: const Text('Questions'),
+        ),
+        body: _questionIndex < questions.length
+            ? quiz()
+            : const Center(
+                child: Text(
+                  'Kész vagy!',
+                  style: TextStyle(fontSize: 32),
                 ),
-              )
-              .toList(), // toList not necessiary
-        ],
-      ),
+              ));
+  }
+
+  Widget quiz() {
+    return Column(
+      children: [
+        Question(questionText: questions[_questionIndex]['question'] as String),
+        ...(questions[_questionIndex]['answers'] as List<String>)
+            .map(
+              (answer) => Answer(
+                onTap: _onAnswer,
+                answer: answer,
+              ),
+            )
+            .toList(), // toList not necessiary
+      ],
     );
   }
 
@@ -54,13 +67,17 @@ class _HomePageState extends State<HomePage> {
     print(_questionIndex.toString());
     // ignore: avoid_print
     print('Answer$_questionIndex');
+
     setState(
       () {
-        if (_questionIndex >= questions.length - 1) {
-          _questionIndex = -1;
-        }
         _questionIndex++;
       },
     );
+  }
+
+  void restart() {
+    setState(() {
+      _questionIndex = 0;
+    });
   }
 }
