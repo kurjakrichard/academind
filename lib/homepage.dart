@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _questionIndex = 0;
-  List<Map<String, dynamic>> questions = [
+  final List<Map<String, dynamic>> questions = const [
     {
       'question': 'Ki vagy?',
       'answers': ['Micimackó', 'Hófehérke', 'Törpapa']
@@ -50,13 +50,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onAnswer() {
-    setState(() {
-      _questionIndex++;
-    });
-
     // ignore: avoid_print
     print(_questionIndex.toString());
     // ignore: avoid_print
-    print('Answer1');
+    print('Answer$_questionIndex');
+    setState(
+      () {
+        if (_questionIndex >= questions.length - 1) {
+          _questionIndex = -1;
+        }
+        _questionIndex++;
+      },
+    );
   }
 }
